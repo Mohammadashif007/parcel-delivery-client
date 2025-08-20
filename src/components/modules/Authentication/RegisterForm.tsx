@@ -16,17 +16,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Password from "@/components/ui/password";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
-    name: z.string().min(2).max(50),
-    email: z.email(),
-    password: z.string().min(6),
-    confirmPassword: z.string().min(6),
-});
+const formSchema = z
+    .object({
+        name: z.string().min(2).max(50),
+        email: z.email(),
+        password: z.string().min(6),
+        confirmPassword: z.string().min(6),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Password dose not match",
+        path: ["confirmPassword"],
+    });
 
 export function RegisterForm({
     className,
     ...props
-}: React.ComponentProps<"form">) {
+}: React.HTMLAttributes<HTMLDivElement>) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
