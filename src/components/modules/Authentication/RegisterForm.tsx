@@ -15,6 +15,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Password from "@/components/ui/password";
 import { Input } from "@/components/ui/input";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
+import { toast } from "sonner";
 
 const formSchema = z
     .object({
@@ -42,8 +44,20 @@ export function RegisterForm({
         },
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
+    const [register, { isLoading }] = useRegisterMutation();
+
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        try {
+            const userInfo = {
+                name: data.name,
+                email: data.email,
+                password: data.password,
+            };
+            await register(userInfo).unwrap();
+            toast.success("User register successfully");
+        } catch (err) {
+            console.error("Register failed:", err);
+        }
     };
 
     return (
@@ -124,7 +138,7 @@ export function RegisterForm({
                             )}
                         />
                         <Button className="w-full cursor-pointer">
-                            Register
+                            {isLoading ? "Registering..." : "Register"}
                         </Button>
                     </form>
                 </Form>

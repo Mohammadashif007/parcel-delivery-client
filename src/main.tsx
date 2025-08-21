@@ -7,6 +7,7 @@ import { ThemeProvider } from "./providers/theme-provider";
 
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import { Toaster } from "sonner";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
@@ -15,5 +16,6 @@ createRoot(document.getElementById("root")!).render(
                 <RouterProvider router={router}></RouterProvider>
             </Provider>
         </ThemeProvider>
+        <Toaster richColors position="top-center"></Toaster>
     </StrictMode>
 );
